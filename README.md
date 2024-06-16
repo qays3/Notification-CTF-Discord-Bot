@@ -1,4 +1,4 @@
-```md
+
 # Discord Bot for First Blood Challenges and New Challenges Notifications
 
 This Discord bot is designed to manage and notify users about "First Blood" challenges and new challenges in a competition. The bot uses MySQL for data storage and retrieval, and the Discord API for notifications.
@@ -235,4 +235,3 @@ This project is licensed under the MIT License.
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
-```
