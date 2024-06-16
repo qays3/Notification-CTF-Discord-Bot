@@ -1,9 +1,9 @@
+```md
 # Discord Bot for First Blood Challenges and New Challenges Notifications
 
 This Discord bot is designed to manage and notify users about "First Blood" challenges and new challenges in a competition. The bot uses MySQL for data storage and retrieval, and the Discord API for notifications.
 
 ![alt text](img/logo/logo.png)
-
 
 ## Features
 
@@ -50,7 +50,7 @@ This Discord bot is designed to manage and notify users about "First Blood" chal
     Replace the placeholder with your actual bot token in the `start_bot` function:
 
     ```python
-    await client.start('YOUR_BOT_TOKEN') # Toekn here
+    await client.start('YOUR_BOT_TOKEN') # Token here
     ```
 
 5. **Run the bot**:
@@ -58,6 +58,72 @@ This Discord bot is designed to manage and notify users about "First Blood" chal
     ```bash
     python main.py
     ```
+
+## Database Schema
+
+The bot uses the following MySQL database tables:
+```bash
+CREATE TABLE `challenges` (
+  `id` int(255) NOT NULL,
+  `CHname` varchar(255) NOT NULL,
+  `CHpoint` int(255) NOT NULL,
+  `CHhint` varchar(255) NOT NULL,
+  `CHlink` varchar(255) DEFAULT NULL,
+  `CHfile` varchar(255) DEFAULT NULL,
+  `CHcategory` varchar(255) NOT NULL,
+  `CHstatus` varchar(255) NOT NULL DEFAULT 'OFF',
+  `adminName` varchar(255) NOT NULL,
+  `CHlevel` varchar(255) DEFAULT NULL,
+  `CHtimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE challenges MODIFY adminName VARCHAR(255) COLLATE utf8mb4_general_ci;
+
+CREATE TABLE `COMPEINFO` (
+  `compe_id` int(11) NOT NULL,
+  `time_start` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `time_end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`compe_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `solvedchallenges` (
+  `id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `CHid` int(255) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `Time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `userId` (`userId`),
+  KEY `CHid` (`CHid`),
+  KEY `solvedchallenges_team_fk` (`team_id`),
+  CONSTRAINT `fk_solvedchallenges_challenges` FOREIGN KEY (`CHid`) REFERENCES `challenges` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_solvedchallenges_team` FOREIGN KEY (`team_id`) REFERENCES `Team` (`Teamid`) ON DELETE SET NULL,
+  CONSTRAINT `fk_solvedchallenges_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `Team` (
+  `Teamid` int(11) NOT NULL,
+  `leader_id` int(11) DEFAULT NULL,
+  `TeamName` varchar(255) NOT NULL,
+  PRIMARY KEY (`Teamid`),
+  KEY `Team_ibfk_1` (`leader_id`),
+  CONSTRAINT `Team_ibfk_1` FOREIGN KEY (`leader_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `UserName` varchar(255) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `team_id` (`team_id`),
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `Team` (`Teamid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+- `challenges`: Stores challenge information.
+- `COMPEINFO`: Stores competition start and end times.
+- `solvedchallenges`: Stores records of solved challenges.
+- `Team`: Stores team information.
+- `users`: Stores user information.
 
 ## Bot Functionality
 
@@ -88,7 +154,6 @@ The bot checks for first blood achievements every second and sends a notificatio
 
 ![alt text](img/screenshot/1.png)
 
-
 ```python
 @tasks.loop(seconds=1)
 async def check_first_blood():
@@ -101,7 +166,7 @@ async def check_first_blood():
     if first_blood_entries:
         for entry in first_blood_entries:
             challenge_id = entry['id']
-    
+            # Additional logic for sending notifications
 ```
 
 ### New Challenge Notifications
@@ -109,7 +174,6 @@ async def check_first_blood():
 The bot checks for new challenges every minute and sends notifications to both admin and general channels.
 
 ![alt text](img/screenshot/2.png)
-
 
 ```python
 @tasks.loop(seconds=60)
@@ -124,7 +188,7 @@ async def check_new_chall():
 
     general_channel = client.get_channel(general_channel_id)
     admin_channel = client.get_channel(admin_channel_id)
-     
+    # Additional logic for sending notifications
 ```
 
 ### On Ready Event
@@ -147,7 +211,7 @@ Handles starting and restarting the bot.
 async def start_bot():
     while True:
         try:
-            await client.start('YOUR_BOT_TOKEN') # token here
+            await client.start('YOUR_BOT_TOKEN') # Token here
         except aiohttp.ClientConnectorError as e:
             print(f"Connection failed: {e}")
             print("Retrying in 5 seconds...")
@@ -171,3 +235,4 @@ This project is licensed under the MIT License.
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+```
