@@ -56,8 +56,14 @@ This Discord bot is designed to manage and notify users about "First Blood" chal
 5. **Run the bot**:
 
     ```bash
-    python main.py
+    python main.py 
     ```
+    OR
+   
+    ```bash
+    nohup python main.py > output.log &
+    ```
+   
 
 ## Database Schema
 
