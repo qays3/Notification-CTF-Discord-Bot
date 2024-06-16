@@ -1,0 +1,5 @@
+discord
+aiohttp
+pymysql
+asyncio
+datetime
