@@ -241,3 +241,10 @@ This project is licensed under the MIT License.
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## Credits
+[qays3](https://github.com/qays3) ([Support qays](https://buymeacoffee.com/hidden))
+
+&
+
+[Mstr0A](https://github.com/Mstr0A) ([Support Mstr0A](https://buymeacoffee.com/mstr0a))
