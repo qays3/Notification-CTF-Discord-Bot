@@ -25,7 +25,7 @@ This Discord bot is designed to manage and notify users about "First Blood" chal
 
     ```bash
     git clone https://github.com/qays3/Notification-CTF-Discord-Bot.git
-    cd your-repo-name
+    cd Notification-CTF-Discord-Bot
     ```
 
 2. **Install dependencies**:
